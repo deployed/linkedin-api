@@ -70,10 +70,13 @@ class Linkedin(object):
         url = f"{self.client.API_BASE_URL}{uri}"
         return self.client.session.post(url, **kwargs)
 
-    def search(self, params, limit=None, results=[]):
+    def search(self, params, limit=None, results=None):
         """
         Do a search.
         """
+        if results is None:
+            results = []
+
         count = (
             limit
             if limit and limit <= Linkedin._MAX_SEARCH_COUNT
