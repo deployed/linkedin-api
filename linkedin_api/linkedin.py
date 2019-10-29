@@ -14,6 +14,10 @@ from linkedin_api.client import Client
 logger = logging.getLogger(__name__)
 
 
+class RequestsLimitException(Exception):
+    pass
+
+
 def default_evade():
     """
     A catch-all method to try and evade suspension from Linkedin.
@@ -99,6 +103,9 @@ class Linkedin(object):
         )
 
         data = res.json()
+
+        if 'status' in data and data['status'] == 401:
+            raise RequestsLimitException('We reached maximum searches with this account')
 
         new_elements = []
         for i in range(len(data["data"]["elements"])):
